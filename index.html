@@ -1,0 +1,440 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#090a0e"><meta name="description" content="Mission 60 fitness, nutrition and weight-gain tracker"><link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="icons/icon-192.png"><title>Mission 60 — Fitness Dashboard</title><style>
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:#08090c;color:#f7f7f8;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+body{padding:0 0 84px;background:radial-gradient(ellipse at 80% 0%,rgba(255,43,64,.13),transparent 34%),linear-gradient(180deg,#0a0b0e,#15161a 55%,#08090c)}
+button,input,textarea,select{font:inherit}
+.app-shell{max-width:520px;min-height:100vh;margin:auto;padding:17px 16px 104px}
+.topbar{display:flex;align-items:center;justify-content:space-between;margin:4px 2px 22px}
+.brandmark{display:flex;align-items:center;gap:10px}.brand-dot{width:12px;height:28px;border-radius:8px;background:linear-gradient(#ff7582,#e51e39);box-shadow:0 0 18px #f33}
+.brand-name{font-weight:900;letter-spacing:1.6px;font-size:14px}.brand-name b{color:#ff3b50}.brandmark small{font-size:8px;letter-spacing:2px;color:#92939a}
+.avatar{width:38px;height:38px;border-radius:50%;border:1px solid #777;background:linear-gradient(140deg,#555,#191a1d);color:white;font-weight:800}
+.tabs{display:flex;gap:8px;padding:5px;border:1px solid rgba(255,255,255,.10);border-radius:18px;background:rgba(255,255,255,.045);backdrop-filter:blur(20px);margin-bottom:22px}
+.tab{flex:1;border:0;border-radius:13px;padding:10px 5px;background:transparent;color:#aaa;font-size:12px;font-weight:700;box-shadow:none}
+.tab.active{background:linear-gradient(120deg,#ff3d50,#d81e38);color:white;box-shadow:0 5px 18px rgba(255,40,62,.30)}
+.screen{display:none;animation:fade .24s ease}.screen.active{display:block}@keyframes fade{from{opacity:.2;transform:translateY(5px)}to{opacity:1;transform:none}}
+.welcome{padding:7px 4px 17px}.eyebrow,.screen-title>small,.section-head small{font-size:9px;letter-spacing:2px;color:#ff7b87;font-weight:900}
+.welcome h1,.screen-title h1{font-size:34px;line-height:1.08;letter-spacing:-1.5px;margin:12px 0 9px;font-weight:850}
+.welcome h1 em,.screen-title h1 em{font-style:normal;color:#ff4055}.welcome p,.screen-title p{font-size:12px;color:#aeb0b7;margin:0}
+.hero-panel{padding:18px;border-radius:24px;border:1px solid rgba(255,66,86,.75);background:linear-gradient(135deg,rgba(95,19,34,.72),rgba(22,24,32,.88) 65%,rgba(11,21,39,.9));box-shadow:0 0 0 1px rgba(255,48,70,.12),0 0 28px rgba(255,40,60,.20),0 18px 40px #0008,inset 0 1px #ffffff24;backdrop-filter:blur(24px)}
+.hero-top,.between,.hero-foot,.section-head,.panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.live-pill{font-size:8px;letter-spacing:1.3px;color:#ffd9dd;border:1px solid #ff6b7a66;border-radius:99px;padding:6px 9px;background:#ff30441a}.live-pill i{display:inline-block;width:6px;height:6px;background:#ff3c53;border-radius:50%;margin-right:5px;box-shadow:0 0 8px #ff304d}
+.muted,.hero-top .muted{font-size:9px;color:#aaa}.hero-metrics{display:flex;gap:35px;margin:24px 0 14px}.hero-metrics div{display:grid;gap:4px}.hero-metrics small{font-size:10px;color:#b8b8bf}.hero-metrics strong{font-size:27px;letter-spacing:-1px}.hero-metrics sup{font-size:10px;color:#ff8d99}
+.progress-line{height:6px;border-radius:20px;background:#ffffff18;overflow:hidden}.progress-line i{display:block;width:0;height:100%;border-radius:20px;background:linear-gradient(90deg,#ff334d,#ff8b95);box-shadow:0 0 12px #ff334d}
+.hero-foot{justify-content:flex-start;gap:8px;margin-top:9px;font-size:9px;color:#b7b7bd}.hero-foot span:first-child{color:#fff;font-weight:800}
+.section-head{margin:25px 3px 12px}.section-head h2{font-size:19px;margin:4px 0 0}.date-chip,.red-tag{font-size:8px;letter-spacing:1px;color:#ff8793;border:1px solid #ff465b55;border-radius:99px;padding:6px 9px;background:#ff334512}
+.quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}.quick-grid.three{grid-template-columns:repeat(3,1fr)}
+.quick-card{min-width:0;padding:14px;border-radius:19px;background:linear-gradient(145deg,#ffffff15,#ffffff06);border:1px solid #ff485b65;box-shadow:0 0 16px #ff30440d,inset 0 1px #ffffff18;display:flex;flex-direction:column;gap:4px}
+.quick-icon{font-size:15px}.quick-card small{font-size:9px;color:#aeb0b7}.quick-card strong{font-size:25px;line-height:1.1}
+.panel{padding:17px;margin:12px 0;border-radius:22px;background:linear-gradient(145deg,rgba(61,62,68,.56),rgba(20,21,26,.78));border:1px solid rgba(255,69,88,.55);box-shadow:0 0 0 1px #ff34440d,0 0 20px #ff30440d,0 15px 35px #0007,inset 0 1px #ffffff1b;backdrop-filter:blur(23px)}
+.panel h3{font-size:14px;margin:0}.panel-note{font-size:10px;line-height:1.5;color:#a6a7ae}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:9px}label{display:block;font-size:10px;color:#c2c3c8;margin:11px 0 5px}
+input,textarea,select{width:100%;min-width:0;padding:11px 12px;border-radius:12px;border:1px solid #ff536655;background:rgba(5,6,10,.72);color:#fff;font-size:12px;outline:none;box-shadow:inset 0 1px 5px #0007}
+input:focus,textarea:focus,select:focus{border-color:#ff697a;box-shadow:0 0 0 3px #ff304426}
+textarea{min-height:70px;resize:vertical}
+.primary-btn,.secondary-btn{border-radius:12px;padding:12px 15px;font-size:10px;font-weight:850;letter-spacing:.5px;cursor:pointer}
+.primary-btn{background:linear-gradient(110deg,#ff3c51,#d91c38);border:1px solid #ff9aa5aa;color:white;box-shadow:0 6px 18px #f22b4538,inset 0 1px #ffffff45}
+.secondary-btn{background:#ffffff0a;border:1px solid #ff536655;color:#eee}
+.full{width:100%;margin-top:12px}
+.between{font-size:10px;color:#b9bbc1;margin-top:7px}.between b{color:white}
+.hydro-grid{display:grid;grid-template-columns:1fr;gap:2px}
+.check{display:flex;align-items:center;gap:9px;padding:10px 0;border-bottom:1px solid #ffffff12;font-size:11px;color:#eee}.check:last-child{border:0}.check input{width:17px;height:17px;accent-color:#ff3b50}
+.actions{display:flex;gap:8px;margin-top:12px}.xp{font-size:10px;color:#ff7e8a}
+.screen-title{padding:10px 4px 20px}.screen-title h1{font-size:32px}
+.analytics-hero{display:flex;justify-content:space-between;align-items:center;padding:22px;border-radius:24px;background:linear-gradient(130deg,#501523,#1c1d24 75%);border:1px solid #ff536b99;box-shadow:0 0 26px #ff30441c,inset 0 1px #ffffff25}.analytics-hero>div:first-child{display:grid;gap:6px}.analytics-hero small{font-size:9px;color:#ff9ca6;letter-spacing:1.3px}.analytics-hero strong{font-size:34px}.analytics-hero strong i{font-size:12px;font-style:normal;color:#aaa}.analytics-hero span{font-size:10px;color:#bbb}
+.target-ring{width:76px;height:76px;border:5px solid #ff4055;border-left-color:#ffffff24;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 0 17px #ff30444a}.target-ring b{font-size:20px}.target-ring small{font-size:7px}
+.chart-panel{padding:17px}.chart-labels,.chart-days{display:flex;justify-content:space-between;color:#999;font-size:8px;letter-spacing:1px}.bars{height:150px;display:flex;align-items:end;gap:10px;padding:14px 4px 4px;border-bottom:1px solid #ffffff20}.bars i{flex:1;min-width:8px;border-radius:8px 8px 3px 3px;background:linear-gradient(180deg,#ff6878,#b91832);box-shadow:0 0 12px #ff30442c}.bars i:last-child{background:linear-gradient(180deg,#ffb0b8,#ff344f);box-shadow:0 0 18px #ff304477}.chart-days{padding:7px 3px 0;letter-spacing:0}
+.workout-visual{height:260px;border-radius:25px;overflow:hidden;position:relative;background:radial-gradient(ellipse at 52% 28%,#666b72 0%,#282b31 34%,#101116 73%);border:1px solid #ff5268a0;box-shadow:0 0 25px #ff30441b,inset 0 1px #ffffff26}
+.workout-visual:before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#0001 20%,#08090ee8 100%),repeating-linear-gradient(115deg,transparent 0 38px,#ffffff08 39px 40px)}
+.workout-overlay{position:absolute;inset:17px;display:flex;flex-direction:column;justify-content:space-between}.workout-overlay h2{font-size:27px;line-height:1.0;letter-spacing:1px;margin:5px 0}.workout-overlay small{font-size:9px;letter-spacing:2px;color:#ff9ca6}
+.workout-stats{display:flex;justify-content:space-between;align-items:center;padding:15px 4px}.workout-stats div{display:grid;gap:3px}.workout-stats small,.goal-row small{font-size:8px;color:#aaa;letter-spacing:1px}.workout-stats strong{font-size:25px;font-variant-numeric:tabular-nums}
+.goal-row{display:flex;justify-content:space-between}.goal-row div{display:grid;gap:5px}.goal-row strong{font-size:22px}
+.bottom-nav{position:fixed;z-index:10;bottom:0;left:50%;transform:translateX(-50%);width:min(520px,100%);display:flex;justify-content:space-around;padding:10px 20px calc(10px + env(safe-area-inset-bottom));background:rgba(12,13,17,.90);border-top:1px solid #ff405333;backdrop-filter:blur(22px)}
+.bottom-tab{border:0;background:none;color:#85868d;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:9px;padding:2px 20px;box-shadow:none}.bottom-tab span{font-size:19px}.bottom-tab.active{color:#ff5267}
+@media(min-width:600px){.app-shell{padding-top:28px}.bottom-nav{border-radius:18px 18px 0 0}}
+
+/* Weekly exercise notebook */
+#planNotes{min-height:145px;line-height:1.55;white-space:pre-wrap}
+.planner-list{display:grid;gap:8px;margin-top:15px}
+.plan-day-card{padding:11px 12px;border-radius:14px;border:1px solid rgba(255,75,94,.35);background:rgba(8,9,13,.46)}
+.plan-day-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.plan-day-head strong{font-size:11px;color:#fff}
+.plan-day-head button{padding:6px 10px;font-size:9px}
+.plan-preview{font-size:10px;color:#bfc0c6;white-space:pre-wrap;line-height:1.5;margin-top:7px;overflow-wrap:anywhere}
+.plan-empty{font-size:10px;color:#85868d;font-style:italic;margin-top:7px}
+[hidden]{display:none!important}\n</style></head><body>
+<div class="app-shell"><span id="heroWeight" hidden></span><span id="heroXP" hidden></span>
+ <header class="topbar">
+  <div class="brandmark"><span class="brand-dot"></span><div><div class="brand-name">MISSION <b>60</b></div><small>BUILD YOUR STRONGER SELF</small></div></div>
+  <button class="avatar" id="profileBtn" aria-label="Profile">A</button>
+ </header>
+
+ <nav class="tabs" aria-label="Main navigation">
+  <button class="tab active" data-screen="home">Home</button>
+  <button class="tab" data-screen="analytics">Analytics</button>
+  <button class="tab" data-screen="exercise">Exercise</button>
+ </nav>
+
+ <main>
+  <section class="screen active" id="screen-home">
+   <div class="welcome"><div class="eyebrow">YOUR CONSISTENCY QUEST</div><h1>Stay healthy.<br/>Keep your body <em>strong.</em></h1><p>Small steps. Strong habits. Your 60 kg journey starts here.</p></div>
+   <div class="hero-panel">
+    <div class="hero-top"><span class="live-pill"><i></i> TODAY'S PROGRESS</span><span class="muted">MISSION / 60 KG</span></div>
+    <div class="hero-metrics">
+     <div><small>Latest weight</small><strong id="heroWeight">— kg</strong></div>
+     <div><small>Mission points</small><strong id="heroXP">0 / 100 <sup>XP</sup></strong></div>
+    </div>
+    <div class="progress-line"><i id="homeProgress"></i></div>
+    <div class="hero-foot"><span id="doneCount">0 / 5</span><span>daily missions completed</span></div>
+   </div>
+   <div class="section-head"><div><small>DAILY TRACKING</small><h2>Your nutrition</h2></div><span class="date-chip" id="todayLabel">TODAY</span></div>
+   <div class="quick-grid">
+    <div class="quick-card"><span class="quick-icon">🔥</span><small>Calories</small><strong id="homeCal">—</strong><small>kcal logged</small></div>
+    <div class="quick-card"><span class="quick-icon">✦</span><small>Protein</small><strong id="homeProtein">—</strong><small>grams logged</small></div>
+   </div>
+   <div class="panel">
+    <div class="panel-head"><h3>Food & macros</h3><span class="red-tag">TODAY</span></div>
+    <div class="fields">
+     <div><label>Calories (kcal)</label><input id="cal" type="number" placeholder="e.g. 2500"></div>
+     <div><label>Protein (g)</label><input id="protein" type="number" placeholder="e.g. 90"></div>
+     <div><label>Carbs (g)</label><input id="carbs" type="number" placeholder="e.g. 300"></div>
+     <div><label>Fat (g)</label><input id="fat" type="number" placeholder="e.g. 70"></div>
+    </div>
+    <label>Food diary</label><textarea id="food" placeholder="Breakfast, lunch, shakes, snacks, dinner..."></textarea>
+    <div class="panel" style="margin-top:16px">
+     <div class="panel-head"><h3>Quick add a meal</h3><button id="addPresetToggle" class="secondary-btn" type="button">＋ FOOD</button></div>
+     <p class="panel-note">Tap a preset to add its calories and protein to today's totals and food diary.</p>
+     <div id="mealPresetButtons" class="actions" style="flex-wrap:wrap;gap:10px"></div>
+     <div id="customPresetForm" hidden style="margin-top:14px;padding:14px;border:1px solid rgba(231,83,103,.45);border-radius:14px;background:rgba(8,9,13,.35)">\n      <p class="panel-note">Create a reusable button. It will stay in Quick add a meal on future days.</p>
+      <div class="fields">
+       <div><label>Meal name</label><input id="presetName" placeholder="e.g. Morning shake"></div>
+       <div><label>Calories (kcal)</label><input id="presetKcal" type="number" min="0" placeholder="e.g. 510"></div>
+       <div><label>Protein (g)</label><input id="presetProtein" type="number" min="0" step="0.1" placeholder="e.g. 47"></div>
+      </div>
+      <div class="actions" style="margin-top:10px">
+       <button id="savePreset" class="primary-btn" type="button">Save as preset</button>
+       <button id="cancelPreset" class="secondary-btn" type="button">Cancel</button>
+      </div>
+     </div>
+    </div>
+    <button id="saveMacros" class="primary-btn full">Save today's nutrition</button>
+   </div>
+   <div class="panel">
+    <div class="panel-head"><h3>Hydration checkpoints</h3><span class="water-mark">💧</span></div>
+    <p class="panel-note">Log all fluids comfortably. Your daily goal is flexible, not compulsory.</p>
+    <label>Optional fluid goal (ml)</label><input id="fluidGoal" type="number" min="0" step="100" value="3000">
+    <div class="progress-line"><i id="fluidBar"></i></div><div class="between"><b id="fluidTotal">0 ml logged</b><span id="fluidPct">0% of goal</span></div>
+    <div class="hydro-grid">
+     <div><label>1:30 PM · Lunch</label><input id="h1" type="number" placeholder="Total ml so far"></div>
+     <div><label>5:30 PM · Snacks</label><input id="h2" type="number" placeholder="Total ml so far"></div>
+     <div><label>8:30 PM · Dinner</label><input id="h3" type="number" placeholder="Total ml so far"></div>
+    </div>
+    <button class="secondary-btn full" id="saveHydro">Save hydration</button>
+   </div>
+   <div class="panel">
+    <div class="panel-head"><h3>Today's missions</h3><b class="xp" id="xp">0 / 100 XP</b></div>
+    <div id="checks">
+  <label class="check"><input type="checkbox" data-task="0"><span>Logged meals and mess portions</span></label>
+  <label class="check"><input type="checkbox" data-task="1"><span>Had planned meals and shakes</span></label>
+  <label class="check"><input type="checkbox" data-task="2"><span>Reviewed calories and macros</span></label>
+  <label class="check"><input type="checkbox" data-task="3"><span>Recorded morning weight</span></label>
+  <label class="check"><input type="checkbox" data-task="4"><span>Workout completed or planned rest taken</span></label>
+ </div>
+ <div class="row" style="margin-top:12px"><span class="muted">20 XP per mission</span><strong class="xp" id="xp">0 / 100 XP</strong></div>
+ <div class="actions"><button class="secondary" id="resetDay">Start a new day</button><button class="secondary" id="export">Export my log</button></div>
+
+    <div class="actions"><button class="secondary-btn" id="resetDay">New day</button><button class="secondary-btn" id="export">Export log</button></div>
+   </div>
+  </section>
+
+  <section class="screen" id="screen-analytics">
+   <div class="screen-title"><small>YOUR JOURNEY</small><h1>Your <em>analytics.</em></h1><p>See the small wins adding up.</p></div>
+   <div class="analytics-hero">
+    <div><small>WEIGHT PROGRESS</small><strong id="analyticsWeight">— <i>kg</i></strong><span>Goal · 60 kg</span></div>
+    <div class="target-ring"><b>60</b><small>KG GOAL</small></div>
+   </div>
+   <div class="section-head"><div><small>BODY METRICS</small><h2>Weight results</h2></div><span class="red-tag">HISTORY</span></div>
+   <div class="panel chart-panel"><div class="chart-labels"><span>WEIGHT (KG)</span><span>LAST ENTRIES</span></div><div class="bars" id="weightChart"><i style="height:18%"></i><i style="height:24%"></i><i style="height:30%"></i><i style="height:36%"></i><i style="height:43%"></i><i style="height:50%"></i><i style="height:58%"></i></div><div class="chart-days"><span>—</span><span>—</span><span>—</span><span>—</span><span>—</span><span>—</span><span>NOW</span></div><p class="panel-note" id="weightHistory">No weigh-ins saved yet.</p></div>
+   <div class="quick-grid three">
+    <div class="quick-card"><small>Calories</small><strong id="analyticsCal">—</strong><small>kcal</small></div>
+    <div class="quick-card"><small>Protein</small><strong id="analyticsProtein">—</strong><small>grams</small></div>
+    <div class="quick-card"><small>Hydration</small><strong id="analyticsWater">0</strong><small>ml logged</small></div>
+   </div>
+   <div class="panel">
+    <div class="panel-head"><h3>Record your weigh-in</h3><span class="red-tag">KG</span></div>
+    <label>Morning weight (kg)</label><input id="weight" type="number" step="0.01" placeholder="e.g. 52.4">
+    <button class="primary-btn full" id="saveWeight">Save weigh-in</button>
+    <p class="panel-note">Weigh under similar conditions and compare weekly trends, not daily fluctuations.</p>
+   </div>
+  </section>
+
+  <section class="screen" id="screen-exercise">
+   <div class="screen-title"><small>TRAIN WITH PURPOSE</small><h1>Make every rep <em>count.</em></h1><p>Log your session and keep your streak moving.</p></div>
+   <div class="workout-visual">
+    <div class="workout-overlay"><span class="live-pill"><i></i> TRAINING MODE</span><div><small>MISSION 60</small><h2>STRONGER<br/>EVERY DAY</h2></div></div>
+   </div>
+   <div class="workout-stats">
+    <div><small>SESSION TIMER</small><strong id="timerDisplay">00:00</strong></div>
+    <button id="timerToggle" class="primary-btn">START SESSION</button>
+   </div>
+   <div class="panel">
+    <div class="panel-head"><h3>Today's workout</h3><span class="red-tag">SESSION</span></div>
+    <label>Workout focus</label><select id="workoutFocus"><option>Push · Chest / Shoulders / Triceps</option><option>Pull · Back / Biceps</option><option>Legs · Lower body</option><option>Core & mobility</option><option>Rest day</option></select>
+    <label>Exercises completed</label><textarea id="exerciseNotes" placeholder="e.g. Bench press 3×10, rows 3×12..."></textarea>
+    <button id="saveWorkout" class="primary-btn full">Save workout notes</button>
+    <p class="panel-note" id="workoutSaved">Workout notes stay on this device during this session.</p>
+   </div>
+
+   <div class="panel" id="weeklyPlanner">
+    <div class="panel-head"><h3>Weekly exercise notebook</h3><span class="red-tag">7 DAYS</span></div>
+    <p class="panel-note">Plan your exercises for each day. Add exercise names, sets, reps and any notes. Your weekly plan stays saved on this device.</p>
+    <label for="planDay">Choose a day</label>
+    <select id="planDay">
+     <option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option>
+    </select>
+    <label for="planNotes">Exercises for this day</label>
+    <textarea id="planNotes" rows="6" placeholder="Example:\nBench press — 3 × 10\nIncline dumbbell press — 3 × 12\nLateral raises — 3 × 15\nTriceps pushdown — 3 × 12"></textarea>
+    <button id="saveDayPlan" class="primary-btn full">Save this day's plan</button>
+    <p class="panel-note" id="planSavedStatus" aria-live="polite">Choose a day to write or edit its exercise plan.</p>
+    <div class="planner-list" id="weeklyPlanList"></div>
+   </div>
+   <div class="panel">
+    <div class="panel-head"><h3>Body goal</h3><span class="red-tag">60 KG</span></div>
+    <div class="goal-row"><div><small>FIRST MILESTONE</small><strong>55 kg</strong></div><div><small>LONG-TERM GOAL</small><strong>60 kg</strong></div></div>
+   </div>
+  </section>
+ </main>
+ <nav class="bottom-nav">
+  <button class="bottom-tab active" data-screen="home"><span>⌂</span>Home</button>
+  <button class="bottom-tab" data-screen="analytics"><span>▥</span>Analytics</button>
+  <button class="bottom-tab" data-screen="exercise"><span>◉</span>Exercise</button>
+ </nav>
+</div>
+<script>
+const $=id=>document.getElementById(id), today=()=>new Date().toISOString().slice(0,10);
+document.body.dataset.theme='red';
+localStorage.setItem('mission60-theme','red');
+const key='mission60-'+today(), histKey='mission60-history';
+let data=JSON.parse(localStorage.getItem(key)||'{}');
+function persist(){localStorage.setItem(key,JSON.stringify(data));render()}
+function render(){
+ const dayLabel=new Date().toLocaleDateString(undefined,{weekday:'short',day:'numeric',month:'short'});
+ if($('todayLabel'))$('todayLabel').textContent=dayLabel.toUpperCase();
+ if($('homeCal'))$('homeCal').textContent=data.cal||'—';
+ if($('homeProtein'))$('homeProtein').textContent=data.protein||'—';
+ if($('analyticsCal'))$('analyticsCal').textContent=data.cal||'—';
+ if($('analyticsProtein'))$('analyticsProtein').textContent=data.protein||'—';
+ if($('analyticsWater'))$('analyticsWater').textContent=Math.max(0,...['h1','h2','h3'].map(id=>Number(data[id])||0)).toLocaleString();
+ if($('analyticsWeight'))$('analyticsWeight').innerHTML=(data.weight||'—')+' <i>kg</i>';
+ if($('homeProgress'))$('homeProgress').style.width=((data.tasks||[]).filter(Boolean).length*20)+'%';
+
+ $('fluidGoal').value=data.goal??3000;
+ ['h1','h2','h3','cal','protein','carbs','fat','food','weight'].forEach(id=>{if(data[id]!==undefined)$(id).value=data[id]});
+ document.querySelectorAll('[data-task]').forEach(el=>el.checked=!!(data.tasks||[])[+el.dataset.task]);
+ const vals=['h1','h2','h3'].map(id=>Number(data[id])||0), total=Math.max(0,...vals);
+ $('fluidTotal').textContent=total.toLocaleString()+' ml logged';
+ const goal=Number(data.goal??3000)||0, pct=goal?Math.min(100,total/goal*100):0;
+ $('fluidBar').style.width=pct+'%';$('fluidPct').textContent=Math.round(pct)+'% of flexible goal';
+ const n=(data.tasks||[]).filter(Boolean).length,xp=n*20;
+ $('xp').textContent=xp+' / 100 XP';$('heroXP').textContent=xp+' / 100 XP';$('doneCount').textContent=n+' / 5';
+ const hist=JSON.parse(localStorage.getItem(histKey)||'[]');
+ $('heroWeight').textContent=(data.weight||hist.at(-1)?.weight||'—')+' kg';
+ $('weightHistory').textContent=hist.length?hist.slice(-7).map(x=>x.date+': '+x.weight+' kg').join('  ·  '):'No weigh-ins saved yet.';
+ if($('weightChart')&&hist.length){
+  const recent=hist.slice(-7), nums=recent.map(x=>Number(x.weight)), min=Math.min(...nums)-1, max=Math.max(...nums)+1;
+  $('weightChart').innerHTML=recent.map(x=>'<i title="'+x.date+': '+x.weight+' kg" style="height:'+Math.max(12,((Number(x.weight)-min)/(max-min))*82)+'%"></i>').join('');
+ }
+}
+['fluidGoal','h1','h2','h3','cal','protein','carbs','fat','food','weight'].forEach(id=>$(id).addEventListener('change',()=>{data[id]=$(id).value;persist()}));
+document.querySelectorAll('[data-task]').forEach(el=>el.addEventListener('change',()=>{data.tasks=data.tasks||[];data.tasks[+el.dataset.task]=el.checked;persist()}));
+$('saveHydro').onclick=()=>{['h1','h2','h3'].forEach(id=>data[id]=$(id).value);data.goal=$('fluidGoal').value;persist();alert('Hydration saved 💧')};
+$('saveMacros').onclick=()=>{['cal','protein','carbs','fat','food'].forEach(id=>data[id]=$(id).value);persist();alert('Macros and food notes saved 🍽️')};
+// Reusable quick-meal presets. Custom presets persist across days on this device.
+const presetStoreKey='mission60-meal-presets-v1';
+const defaultPresets=[
+ {id:'morning-shake',name:'Morning shake',kcal:510,protein:47},
+ {id:'evening-shake',name:'Evening shake',kcal:390,protein:22}
+];
+function readPresets(){
+ try { const saved=JSON.parse(localStorage.getItem(presetStoreKey)||'null'); return Array.isArray(saved)?saved:defaultPresets.slice(); }
+ catch(e){ return defaultPresets.slice(); }
+}
+let mealPresets=readPresets();
+function drawMealPresets(){
+ const host=$('mealPresetButtons'); if(!host)return;
+ host.innerHTML='';
+ mealPresets.forEach(p=>{
+  const b=document.createElement('button');
+  b.type='button'; b.className='secondary-btn'; b.textContent=p.name+' · '+p.kcal;
+  b.style.cssText='border:1px solid rgba(231,83,103,.55);border-radius:999px;padding:12px 18px;background:transparent;color:inherit';
+  b.onclick=()=>addMealPreset(p);
+  host.appendChild(b);
+ });
+}
+function addMealPreset(p){
+ ['cal','protein'].forEach(id=>{
+  const input=$(id); input.value=String((Number(input.value)||0)+(id==='cal'?Number(p.kcal):Number(p.protein)));
+  data[id]=input.value;
+ });
+ const note=$('food').value.trim();
+ $('food').value=(note?note+'\n':'')+p.name+' — '+p.kcal+' kcal, '+p.protein+' g protein';
+ data.food=$('food').value;
+ persist();
+}
+$('addPresetToggle').addEventListener('click',()=>{
+ const form=$('customPresetForm');
+ form.hidden=!form.hidden;
+ if(!form.hidden) $('presetName').focus();
+});
+$('cancelPreset').addEventListener('click',()=>{$('customPresetForm').hidden=true});
+$('savePreset').addEventListener('click',()=>{
+ const name=$('presetName').value.trim();
+ const kcal=Number($('presetKcal').value);
+ const protein=Number($('presetProtein').value);
+ if(!name||$('presetKcal').value===''||$('presetProtein').value===''||!Number.isFinite(kcal)||kcal<0||!Number.isFinite(protein)||protein<0){
+  alert('Enter a meal name, calories and protein.');return;
+ }
+ mealPresets.push({id:'custom-'+Date.now(),name,kcal,protein});
+ try { localStorage.setItem(presetStoreKey,JSON.stringify(mealPresets)); }
+ catch(e){ alert('Could not save this preset in browser storage.'); return; }
+ ['presetName','presetKcal','presetProtein'].forEach(id=>$(id).value='');
+ $('customPresetForm').hidden=true;
+ drawMealPresets();
+ alert('Preset saved! It will stay in Quick add a meal for future days.');
+});
+drawMealPresets();
+
+$('saveWeight').onclick=()=>{data.weight=$('weight').value;persist();let h=JSON.parse(localStorage.getItem(histKey)||'[]');h=h.filter(x=>x.date!==today());if(data.weight)h.push({date:today(),weight:data.weight});localStorage.setItem(histKey,JSON.stringify(h));render();alert('Weigh-in saved ⚖️')};
+$('resetDay').onclick=()=>{if(confirm('Start a fresh daily checklist? Your previous day stays saved.')){localStorage.setItem(key,JSON.stringify({goal:data.goal??3000}));data={goal:data.goal??3000};render()}};
+$('export').onclick=()=>{const all={date:today(),...data};const blob=new Blob([JSON.stringify(all,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='mission60-'+today()+'.json';a.click();URL.revokeObjectURL(a.href)};
+
+
+// Weekly exercise notebook: one editable note for every weekday.
+const plannerDays = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+const plannerKey = 'mission60-weekly-exercise-plans-v1';
+const readPlans = () => {
+  try { return JSON.parse(localStorage.getItem(plannerKey) || '{}') || {}; }
+  catch (_) { return {}; }
+};
+let weeklyPlans = readPlans();
+const planDay = $('planDay');
+const planNotes = $('planNotes');
+const planStatus = $('planSavedStatus');
+const planList = $('weeklyPlanList');
+
+function showPlanForSelectedDay() {
+  const day = planDay.value;
+  planNotes.value = weeklyPlans[day] || '';
+  planStatus.textContent = weeklyPlans[day] ? day + ' plan loaded. You can edit it.' : 'No plan saved for ' + day + ' yet.';
+}
+function renderWeeklyPlans() {
+  planList.innerHTML = '';
+  plannerDays.forEach(day => {
+    const note = weeklyPlans[day] || '';
+    const card = document.createElement('div');
+    card.className = 'plan-day-card';
+    const head = document.createElement('div');
+    head.className = 'plan-day-head';
+    const title = document.createElement('strong');
+    title.textContent = day;
+    const edit = document.createElement('button');
+    edit.className = 'secondary-btn';
+    edit.type = 'button';
+    edit.textContent = note ? 'EDIT' : 'ADD';
+    edit.addEventListener('click', () => {
+      planDay.value = day;
+      showPlanForSelectedDay();
+      planNotes.focus();
+      document.getElementById('weeklyPlanner').scrollIntoView({behavior:'smooth',block:'start'});
+    });
+    head.append(title, edit);
+    card.append(head);
+    if (note) {
+      const preview = document.createElement('div');
+      preview.className = 'plan-preview';
+      preview.textContent = note;
+      card.append(preview);
+    } else {
+      const empty = document.createElement('div');
+      empty.className = 'plan-empty';
+      empty.textContent = 'No exercises added yet';
+      card.append(empty);
+    }
+    planList.append(card);
+  });
+}
+planDay.addEventListener('change', showPlanForSelectedDay);
+$('saveDayPlan').addEventListener('click', () => {
+  const day = planDay.value;
+  const note = planNotes.value.trim();
+  if (note) weeklyPlans[day] = note;
+  else delete weeklyPlans[day];
+  localStorage.setItem(plannerKey, JSON.stringify(weeklyPlans));
+  planStatus.textContent = note ? day + ' plan saved ✓' : day + ' plan cleared.';
+  renderWeeklyPlans();
+});
+showPlanForSelectedDay();
+renderWeeklyPlans();
+
+// Main navigation: switch the visible screen and keep both nav bars in sync.
+document.querySelectorAll('[data-screen]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const target = btn.dataset.screen;
+    document.querySelectorAll('.screen').forEach(screen => {
+      screen.classList.toggle('active', screen.id === 'screen-' + target);
+    });
+    document.querySelectorAll('[data-screen]').forEach(navBtn => {
+      navBtn.classList.toggle('active', navBtn.dataset.screen === target);
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+});
+
+// Exercise session timer.
+let mission60Seconds = 0;
+let mission60Interval = null;
+const timerButton = $('timerToggle');
+if (timerButton) {
+  timerButton.addEventListener('click', () => {
+    if (mission60Interval) {
+      clearInterval(mission60Interval);
+      mission60Interval = null;
+      timerButton.textContent = 'RESUME SESSION';
+    } else {
+      timerButton.textContent = 'PAUSE SESSION';
+      mission60Interval = setInterval(() => {
+        mission60Seconds += 1;
+        const mm = String(Math.floor(mission60Seconds / 60)).padStart(2, '0');
+        const ss = String(mission60Seconds % 60).padStart(2, '0');
+        $('timerDisplay').textContent = mm + ':' + ss;
+      }, 1000);
+    }
+  });
+}
+
+// Save workout details locally for today's date.
+const workoutStorageKey = 'mission60-workout-' + today();
+const savedWorkout = JSON.parse(localStorage.getItem(workoutStorageKey) || 'null');
+if (savedWorkout) {
+  $('workoutFocus').value = savedWorkout.focus || $('workoutFocus').value;
+  $('exerciseNotes').value = savedWorkout.notes || '';
+  $('workoutSaved').textContent = 'Workout notes loaded ✓';
+}
+$('saveWorkout').addEventListener('click', () => {
+  const workout = {
+    focus: $('workoutFocus').value,
+    notes: $('exerciseNotes').value,
+    savedAt: new Date().toISOString()
+  };
+  localStorage.setItem(workoutStorageKey, JSON.stringify(workout));
+  $('workoutSaved').textContent = 'Workout saved on this device ✓';
+});
+
+render();
+</script><script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./sw.js").catch(err => console.log("Offline setup:", err));
+  });
+}
+</script>
+</body></html>
